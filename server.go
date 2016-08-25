@@ -1,42 +1,47 @@
+// a simple RESTful application for creating todo list
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
+
+	"github.com/gorilla/mux"
 )
 
 type Todo struct {
-	Id        string   `json:"id"`
-	Task      []string `json:"task"`
-	Completed bool     `json:"completed"`
+	Id        string `json:"id"`
+	Task      string `json:"task"`
+	Completed bool   `json:"completed"`
 }
-
-type Todos []Todo
 
 var todoId = 1
 
-var TodoList Todos
+type TodoList []Todo
 
-func index(w http.ResponseWriter, req *http.Request) {
-	path := req.URL.Path[1:]
-	// var data []byte
-	if len(path) != 0 {
-		data, err := ioutil.ReadFile(path)
-		if err != nil {
-			fmt.Errorf("error reading index file : %s", err)
-		}
-		w.Write(data)
-	} else {
+func main() {
+	mux := mux.NewRouter()
+	//mux.HandleFunc("/new", CreateTodo)
+	//mux.HandleFunc("/showTodo", ShowTodo)
+	//mux.HandleFunc("/deleteTodo/", DeleteTodo)
+	mux.HandleFunc("/", Index)
+	//mux.HandleFunc("/loadTodo", LoadTodo)
+	//http.HandleFunc("/", Index)
+	fmt.Println("listening at :3000")
+	http.ListenAndServe(":3000", mux)
+}
+
+func Index(w http.ResponseWriter, req *http.Request) {
 		data, err := ioutil.ReadFile("public/index.html")
 		if err != nil {
 			fmt.Errorf("error reading index file : %s", err)
 		}
+		w.Header().Add("Content Type", " text/html")
+		w.WriteHeader(200)
 		w.Write(data)
-	}
 }
+
+/*
 
 func CreateTodo(w http.ResponseWriter, req *http.Request) {
 	body, err := ioutil.ReadFile("public/todo.html")
@@ -49,7 +54,7 @@ func CreateTodo(w http.ResponseWriter, req *http.Request) {
 	w.Write(body)
 }
 
-func saveTodos(w http.ResponseWriter, req *http.Request) {
+func SaveTodos(w http.ResponseWriter, req *http.Request) {
 	fp, err := os.OpenFile("todos.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		http.Error(w, "error saving file", 501)
@@ -61,7 +66,7 @@ func saveTodos(w http.ResponseWriter, req *http.Request) {
 	// http.RedirectHandler("http://localhost:8080/showTodos", http.StatusMovedPermanently)
 }
 
-func loadTodo(w http.ResponseWriter, req *http.Request) {
+func LoadTodo(w http.ResponseWriter, req *http.Request) {
 	var newload Todos
 	f, err := os.OpenFile("todos.json", os.O_RDWR|os.O_CREATE, 0666)
 	defer f.Close()
@@ -71,10 +76,17 @@ func loadTodo(w http.ResponseWriter, req *http.Request) {
 	}
 	json.NewDecoder(f).Decode(&newload)
 	fmt.Println(newload)
+	if newload == nil {
+		w.Write([]byte("no records found"))
+	} else {
+		w.Write([]byte("records loaded successfully"))
+		json.NewEncoder(w).Encode(newload)
+	}
+
 	TodoList = newload
 }
 
-func showTodo(w http.ResponseWriter, req *http.Request) {
+func ShowTodo(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	for k, v := range req.Form {
 		var temp = Todo{}
@@ -103,7 +115,7 @@ func showTodo(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("saved successfully"))
 }
 
-func deleteTodo(w http.ResponseWriter, req *http.Request) {
+func DeleteTodo(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	var newList []Todo
 	delid := req.URL.Path[len("/deleteTodo/"):] // extract id coming after Todo/
@@ -115,12 +127,4 @@ func deleteTodo(w http.ResponseWriter, req *http.Request) {
 	TodoList = newList
 }
 
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/new", CreateTodo)
-	mux.HandleFunc("/showTodo", showTodo)
-	mux.HandleFunc("/deleteTodo/", deleteTodo)
-	mux.HandleFunc("/", index)
-	mux.HandleFunc("/loadTodo", loadTodo)
-	http.ListenAndServe(":3000", mux)
-}
+*/
