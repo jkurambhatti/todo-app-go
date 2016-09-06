@@ -34,6 +34,14 @@ var routes = []Route{
 		Method:      "PUT",
 		Path:        "/list/{id}",
 		HandlerFunc: http.HandlerFunc(UpdateTodo)},
+	Route{
+		Method:      "GET",
+		Path:        "/save",
+		HandlerFunc: http.HandlerFunc(SaveTodo)},
+	Route{
+		Method:      "GET",
+		Path:        "/load",
+		HandlerFunc: http.HandlerFunc(LoadTodo)},
 }
 
 func NewRouter() *mux.Router {

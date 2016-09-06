@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"os"
 )
 
 func Index(w http.ResponseWriter, req *http.Request) {
@@ -76,3 +77,34 @@ func UpdateTodo(w http.ResponseWriter, req *http.Request) {
 	msg := fmt.Sprintf("task %s has been updated : %s \n", updateid, string(v))
 	w.Write([]byte(msg))
 }
+
+func SaveTodo(w http.ResponseWriter, req *http.Request) {
+	fp, err := os.OpenFile("todos.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		http.Error(w, "error opening file", 501)
+		return
+	}
+	defer fp.Close()
+	json.NewEncoder(fp).Encode(TodoIndex)
+	w.Write([]byte("saved successfully"))
+}
+
+func LoadTodo(w http.ResponseWriter, req *http.Request) {
+	var newload = make(map[string]*Todo)
+	f, err := os.OpenFile("todos.json", os.O_RDWR|os.O_CREATE, 0666)
+	defer f.Close()
+	if err != nil {
+		http.Error(w, "error loading todos :", http.StatusNotFound)
+		return
+	}
+	json.NewDecoder(f).Decode(&newload)
+	fmt.Println(newload)
+	if newload == nil {
+		w.Write([]byte("no records found"))
+	} else {
+		w.Write([]byte("records loaded successfully"))
+		json.NewEncoder(w).Encode(newload)
+	}
+
+}
+

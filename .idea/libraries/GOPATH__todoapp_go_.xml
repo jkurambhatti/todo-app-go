@@ -4,6 +4,7 @@
       <root url="file://$PROJECT_DIR$/../../../honnef.co" />
       <root url="file://$PROJECT_DIR$/../../../dsalgo" />
       <root url="file://$PROJECT_DIR$/../.." />
+      <root url="file://$PROJECT_DIR$/../../../golang.org" />
       <root url="file://$PROJECT_DIR$/../../../simplechat" />
     </CLASSES>
     <JAVADOC />
@@ -11,6 +12,7 @@
       <root url="file://$PROJECT_DIR$/../../../honnef.co" />
       <root url="file://$PROJECT_DIR$/../../../dsalgo" />
       <root url="file://$PROJECT_DIR$/../.." />
+      <root url="file://$PROJECT_DIR$/../../../golang.org" />
       <root url="file://$PROJECT_DIR$/../../../simplechat" />
     </SOURCES>
     <excluded>
