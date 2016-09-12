@@ -11,13 +11,13 @@ type Todo struct {
 
 var TodoIndex = make(map[string]*Todo)
 
+var (
+	certFile = "./.cert/cert.pem"
+	keyFile  = "./.cert/key.pem"
+)
+
 func main() {
 	router := NewRouter()
-	http.ListenAndServe(":3000", router)
+	// http.ListenAndServe(":3000", router)
+	http.ListenAndServeTLS(":3000", certFile, keyFile, router)
 }
-
-/*
-
-
-
-*/
