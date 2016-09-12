@@ -38,6 +38,28 @@ func CreateTodo(w http.ResponseWriter, req *http.Request) {
 	w.Write(v)
 }
 
+func GetTodo(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("reached getTodo path")
+	vars := mux.Vars(req)
+	tid := ""
+	todo := new(Todo)
+	if v, ok := vars["id"]; ok {
+		tid = v
+	}
+	todo = TodoIndex[tid]
+	fmt.Println(tid, todo)
+
+	// tdtsk, err := json.Marshal(todo)
+	// if err != nil {
+	// 	fmt.Println("error marshaling todo")
+	// }
+	w.Header().Add("Content Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(todo)
+	// w.Write(tdtsk)
+
+}
+
 func DeleteTodo(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("reached delete path")
 	vars := mux.Vars(req)
@@ -51,7 +73,7 @@ func DeleteTodo(w http.ResponseWriter, req *http.Request) {
 }
 
 func ShowTodo(w http.ResponseWriter, req *http.Request) {
-	tdl, err := json.MarshalIndent(TodoIndex," ", "    ")
+	tdl, err := json.MarshalIndent(TodoIndex, " ", "    ")
 	if err != nil {
 		fmt.Println("error marshaling todolistindex")
 	}
@@ -102,9 +124,8 @@ func LoadTodo(w http.ResponseWriter, req *http.Request) {
 	if newload == nil {
 		w.Write([]byte("no records found"))
 	} else {
-		w.Write([]byte("records loaded successfully"))
+		// w.Write([]byte("records loaded successfully"))
 		json.NewEncoder(w).Encode(newload)
 	}
 
 }
-

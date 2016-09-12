@@ -19,6 +19,10 @@ var routes = []Route{
 		Path:        "/",
 		HandlerFunc: http.HandlerFunc(Index)},
 	Route{
+		Method:      "GET",
+		Path:        "/list/{id}",
+		HandlerFunc: http.HandlerFunc(GetTodo)},
+	Route{
 		Method:      "POST",
 		Path:        "/insert",
 		HandlerFunc: http.HandlerFunc(CreateTodo)},
@@ -45,9 +49,9 @@ var routes = []Route{
 }
 
 func NewRouter() *mux.Router {
-// StrictSlash defines the trailing slash behavior for new routes. The initial value is false.
-// When true, if the route path is "/path/", accessing "/path" will redirect to the former and vice versa.
-// When false, if the route path is "/path", accessing "/path/" will not match this route and vice versa.
+	// StrictSlash defines the trailing slash behavior for new routes. The initial value is false.
+	// When true, if the route path is "/path/", accessing "/path" will redirect to the former and vice versa.
+	// When false, if the route path is "/path", accessing "/path/" will not match this route and vice versa.
 
 	router := mux.NewRouter().StrictSlash(true)
 
